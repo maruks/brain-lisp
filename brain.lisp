@@ -28,7 +28,7 @@
 
 (defparameter *static*
   (lack:builder
-   (:static :path "/"
+   (:static :path (lambda (path) (if (string= "/" path) "/index.html" path))
 	    :root #P"public/")
    (lambda (env)
      (declare (ignore env))
