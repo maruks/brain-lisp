@@ -9991,11 +9991,11 @@ var _user$project$Main$renderCells = F2(
 								_1: {
 									ctor: '::',
 									_0: _elm_lang$svg$Svg_Attributes$width(
-										_elm_lang$core$Basics$toString(size - 1)),
+										_elm_lang$core$Basics$toString(size)),
 									_1: {
 										ctor: '::',
 										_0: _elm_lang$svg$Svg_Attributes$height(
-											_elm_lang$core$Basics$toString(size - 1)),
+											_elm_lang$core$Basics$toString(size)),
 										_1: {
 											ctor: '::',
 											_0: _elm_lang$svg$Svg_Attributes$style(
@@ -10024,7 +10024,7 @@ var _user$project$Main$range = F3(
 	});
 var _user$project$Main$renderGrid = F3(
 	function (width, height, cellSize) {
-		var lineStyle = 'stroke:#999999;stroke-width:1';
+		var lineStyle = 'stroke:#999999; stroke-opacity:0.5; stroke-width: 1';
 		var hs = _elm_lang$core$Basics$toString(height);
 		var ws = _elm_lang$core$Basics$toString(width);
 		var ys = A3(_user$project$Main$range, 0, height + 1, cellSize);
