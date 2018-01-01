@@ -15,13 +15,6 @@
 ;; (asdf:operate 'asdf:load-op 'brain)
 ;; (ql:write-asdf-manifest-file "quicklisp-manifest.txt")
 
-;; (defun logm (msg)
-;;   (with-open-file (str "/tmp/logfile"
-;;                      :direction :output
-;;                      :if-exists :append
-;;                      :if-does-not-exist :create)
-;;   (format str "~a ~%" msg)))
-
 (defvar *handler* nil)
 
 (defvar *state* nil)
@@ -40,8 +33,8 @@
        for x from 0 to (1- width)
        do (loop
 	     for y from 0 to (1- height)
-	     do (when (zerop (random 3))
-		  (setf (gethash (cons x y) grid) :on))))
+	     do (when (zerop (random 4))
+		  (setf (gethash (cons x y) grid) (if (zerop (random 2)) :on :dying)))))
     grid))
 
 (defun next-state (grid point)
