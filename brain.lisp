@@ -9,7 +9,7 @@
 
 (in-package :brain)
 
-;; (ql:quickload '(:websocket-driver :clack :cl-json))
+;; (ql:quickload '(:websocket-driver :clack :cl-json :hunchentoot))
 
 ;; create manifest file
 ;; (asdf:operate 'asdf:load-op 'brain)

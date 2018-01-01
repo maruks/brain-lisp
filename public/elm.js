@@ -10366,14 +10366,14 @@ var _user$project$Main$update = F2(
 				if (_p20.ctor === 'Ok') {
 					switch (_p20._0.ctor) {
 						case 'CellsMessage':
+							var newCells = _user$project$Main$toCellsDict(_p20._0._0);
+							var task = _elm_lang$core$Dict$isEmpty(newCells) ? A2(_elm_lang$core$Task$perform, _user$project$Main$SetScreenSize, _elm_lang$window$Window$size) : A2(_elm_lang$core$Task$perform, _user$project$Main$CurrentTime, _elm_lang$core$Time$now);
 							return {
 								ctor: '_Tuple2',
 								_0: _elm_lang$core$Native_Utils.update(
 									model,
-									{
-										cells: _user$project$Main$toCellsDict(_p20._0._0)
-									}),
-								_1: A2(_elm_lang$core$Task$perform, _user$project$Main$CurrentTime, _elm_lang$core$Time$now)
+									{cells: newCells}),
+								_1: task
 							};
 						case 'ColorsMessage':
 							return {
