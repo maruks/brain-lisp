@@ -59,14 +59,14 @@
 (defun grid-to-list (grid)
   (let ((cells (loop for point being the hash-keys of grid
 		  collect (acons :color (if (eq :on (gethash point grid)) 1 2) (list (list :point (car point) (cdr point)))))))
-    (acons :type :cells (list (cons :cells cells)))))
+    (acons :tag :cells (list (cons :cells cells)))))
 
 (defun colors-msg ()
   (let* ((on-color (acons :code 1 (list (cons :color "#0875d0"))))
 	 (default-color (acons :code 0 (list (cons :color "#e6e6e6"))))
 	 (dying-color (acons :code 2 (list (cons :color "#6EAFE6"))))
 	 (colors (list default-color on-color dying-color)))
-    (acons :type :colors (list (cons :colors  colors)))))
+    (acons :tag :colors (list (cons :colors  colors)))))
 
 (defun afield (field alist &optional (test #'eq))
   (cdr (assoc field alist :test test)))
@@ -77,9 +77,9 @@
 
 (defun handle-msg (message client-id ws)
   (ensure-initialized client-id)
-  (destructuring-bind (type . payload) (car message)
+  (destructuring-bind (tag . payload) (car message)
     (let ((client (afield client-id *state* #'string=)))
-      (case type
+      (case tag
 	(:start (let* ((grid (new-grid (afield :width payload) (afield :height payload)))
 		       (cons-state (acons :grid grid (acons :state :started payload))))
 		  (setf (cdr (assoc client-id *state* :test #'string=)) cons-state)
@@ -89,7 +89,7 @@
 		 (case state
 		   (:started (progn (send ws (encode-json-alist-to-string (grid-to-list grid)))
 				    (next-grid grid (afield :width client) (afield :height client))))
-		   (t (send ws (encode-json-alist-to-string '((:type . :error) (:code . 1))))))))))))
+		   (t (send ws (encode-json-alist-to-string '((:tag . :error) (:code . 1))))))))))))
 
 (defun client-id (env)
   (format nil "~s ~d" (getf env :remote-addr) (getf env :remote-port)))

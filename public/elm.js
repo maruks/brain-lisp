@@ -10153,6 +10153,22 @@ var _user$project$Main$view = function (_p4) {
 };
 var _user$project$Main$wsAddress = function (_p8) {
 	var _p9 = _p8;
+	var _p10 = _p9.pathName;
+	var xs = A2(_elm_lang$core$String$split, '/', _p10);
+	var path = A2(
+		_elm_lang$core$String$join,
+		'/',
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			A2(
+				_elm_lang$core$List$take,
+				_elm_lang$core$List$length(xs) - 1,
+				A2(_elm_lang$core$String$split, '/', _p10)),
+			{
+				ctor: '::',
+				_0: 'websocket',
+				_1: {ctor: '[]'}
+			}));
 	return A2(
 		_elm_lang$core$Basics_ops['++'],
 		'ws://',
@@ -10162,27 +10178,30 @@ var _user$project$Main$wsAddress = function (_p8) {
 			A2(
 				_elm_lang$core$Basics_ops['++'],
 				':',
-				A2(_elm_lang$core$Basics_ops['++'], _p9.portNum, '/websocket'))));
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					_p9.portNum,
+					A2(_elm_lang$core$String$startsWith, '/', path) ? path : A2(_elm_lang$core$Basics_ops['++'], '/', path)))));
 };
-var _user$project$Main$toColorsDict = function (_p10) {
+var _user$project$Main$toColorsDict = function (_p11) {
 	return _elm_lang$core$Dict$fromList(
 		A2(
 			_elm_lang$core$List$map,
 			function (c) {
 				return {ctor: '_Tuple2', _0: c.code, _1: c.color};
 			},
-			_p10));
+			_p11));
 };
-var _user$project$Main$toCellsDict = function (_p11) {
+var _user$project$Main$toCellsDict = function (_p12) {
 	return _elm_lang$core$Dict$fromList(
 		A2(
 			_elm_lang$core$List$map,
 			function (c) {
-				var _p12 = c.point;
-				if (((_p12.ctor === '::') && (_p12._1.ctor === '::')) && (_p12._1._1.ctor === '[]')) {
+				var _p13 = c.point;
+				if (((_p13.ctor === '::') && (_p13._1.ctor === '::')) && (_p13._1._1.ctor === '[]')) {
 					return {
 						ctor: '_Tuple2',
-						_0: {ctor: '_Tuple2', _0: _p12._0, _1: _p12._1._0},
+						_0: {ctor: '_Tuple2', _0: _p13._0, _1: _p13._1._0},
 						_1: c.color
 					};
 				} else {
@@ -10193,19 +10212,20 @@ var _user$project$Main$toCellsDict = function (_p11) {
 					};
 				}
 			},
-			_p11));
+			_p12));
 };
 var _user$project$Main$initModel = F2(
-	function (_p13, location) {
-		var _p14 = _p13;
+	function (_p14, location) {
+		var _p15 = _p14;
 		return {
 			grid: {width: 0, height: 0, cellSize: 1},
 			url: {
 				host: location.hostname,
-				portNum: _p14.dynamicWsPort ? location.port_ : '8080'
+				pathName: location.pathname,
+				portNum: _p15.dynamicWsPort ? location.port_ : '8080'
 			},
 			cells: _elm_lang$core$Dict$empty,
-			timing: {waitUntil: 0, sentAt: 0, delay: _p14.delay},
+			timing: {waitUntil: 0, sentAt: 0, delay: _p15.delay},
 			colors: A2(_elm_lang$core$Dict$singleton, 0, '#e6e6e6')
 		};
 	});
@@ -10213,9 +10233,9 @@ var _user$project$Main$Flags = F2(
 	function (a, b) {
 		return {dynamicWsPort: a, delay: b};
 	});
-var _user$project$Main$Url = F2(
-	function (a, b) {
-		return {host: a, portNum: b};
+var _user$project$Main$Url = F3(
+	function (a, b, c) {
+		return {host: a, portNum: b, pathName: c};
 	});
 var _user$project$Main$Grid = F3(
 	function (a, b, c) {
@@ -10260,8 +10280,8 @@ var _user$project$Main$CellsMessage = function (a) {
 	return {ctor: 'CellsMessage', _0: a};
 };
 var _user$project$Main$payloadDecoder = function (msgType) {
-	var _p15 = msgType;
-	switch (_p15) {
+	var _p16 = msgType;
+	switch (_p16) {
 		case 'cells':
 			return A2(
 				_elm_lang$core$Json_Decode$map,
@@ -10300,7 +10320,7 @@ var _user$project$Main$payloadDecoder = function (msgType) {
 var _user$project$Main$messageDecoder = A2(
 	_elm_lang$core$Json_Decode$andThen,
 	_user$project$Main$payloadDecoder,
-	A2(_elm_lang$core$Json_Decode$field, 'type', _elm_lang$core$Json_Decode$string));
+	A2(_elm_lang$core$Json_Decode$field, 'tag', _elm_lang$core$Json_Decode$string));
 var _user$project$Main$CurrentTime = function (a) {
 	return {ctor: 'CurrentTime', _0: a};
 };
@@ -10326,20 +10346,23 @@ var _user$project$Main$init = F2(
 	});
 var _user$project$Main$update = F2(
 	function (msg, model) {
-		var _p16 = model;
-		var grid = _p16.grid;
-		var url = _p16.url;
-		var cells = _p16.cells;
-		var timing = _p16.timing;
+		var _p17 = model;
+		var grid = _p17.grid;
+		var url = _p17.url;
+		var cells = _p17.cells;
+		var timing = _p17.timing;
 		var wsAddr = _user$project$Main$wsAddress(url);
-		var _p17 = msg;
-		switch (_p17.ctor) {
+		var _p18 = msg;
+		switch (_p18.ctor) {
 			case 'SetScreenSize':
-				var _p19 = _p17._0.width;
-				var _p18 = _p17._0.height;
-				var c = A2(_elm_lang$core$Basics$max, 10, (_p19 / 90) | 0);
-				var w = (_p19 - A2(_elm_lang$core$Basics_ops['%'], _p19, c)) - c;
-				var h = (_p18 - A2(_elm_lang$core$Basics_ops['%'], _p18, c)) - c;
+				var _p20 = _p18._0.width;
+				var _p19 = _p18._0.height;
+				var c = A2(
+					_elm_lang$core$Basics$max,
+					10,
+					(A2(_elm_lang$core$Basics$max, _p20, _p19) / 80) | 0);
+				var w = (_p20 - A2(_elm_lang$core$Basics_ops['%'], _p20, c)) - c;
+				var h = (_p19 - A2(_elm_lang$core$Basics_ops['%'], _p19, c)) - c;
 				var newGrid = {width: w, height: h, cellSize: c};
 				var cw = _elm_lang$core$Basics$toString((w / c) | 0);
 				var hw = _elm_lang$core$Basics$toString((h / c) | 0);
@@ -10361,12 +10384,12 @@ var _user$project$Main$update = F2(
 					_1: A2(_elm_lang$websocket$WebSocket$send, wsAddr, msg)
 				};
 			case 'NewMessage':
-				var result = A2(_elm_lang$core$Json_Decode$decodeString, _user$project$Main$messageDecoder, _p17._0);
-				var _p20 = result;
-				if (_p20.ctor === 'Ok') {
-					switch (_p20._0.ctor) {
+				var result = A2(_elm_lang$core$Json_Decode$decodeString, _user$project$Main$messageDecoder, _p18._0);
+				var _p21 = result;
+				if (_p21.ctor === 'Ok') {
+					switch (_p21._0.ctor) {
 						case 'CellsMessage':
-							var newCells = _user$project$Main$toCellsDict(_p20._0._0);
+							var newCells = _user$project$Main$toCellsDict(_p21._0._0);
 							var task = _elm_lang$core$Dict$isEmpty(newCells) ? A2(_elm_lang$core$Task$perform, _user$project$Main$SetScreenSize, _elm_lang$window$Window$size) : A2(_elm_lang$core$Task$perform, _user$project$Main$CurrentTime, _elm_lang$core$Time$now);
 							return {
 								ctor: '_Tuple2',
@@ -10381,7 +10404,7 @@ var _user$project$Main$update = F2(
 								_0: _elm_lang$core$Native_Utils.update(
 									model,
 									{
-										colors: _user$project$Main$toColorsDict(_p20._0._0)
+										colors: _user$project$Main$toColorsDict(_p21._0._0)
 									}),
 								_1: _elm_lang$core$Platform_Cmd$none
 							};
@@ -10402,21 +10425,21 @@ var _user$project$Main$update = F2(
 					};
 				}
 			case 'NewFrame':
-				var _p21 = _p17._0;
-				return (_elm_lang$core$Native_Utils.cmp(_p21, timing.waitUntil) < 0) ? {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none} : {
+				var _p22 = _p18._0;
+				return (_elm_lang$core$Native_Utils.cmp(_p22, timing.waitUntil) < 0) ? {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none} : {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
 						{
 							timing: _elm_lang$core$Native_Utils.update(
 								timing,
-								{sentAt: _p21, waitUntil: _p21 + 1000})
+								{sentAt: _p22, waitUntil: _p22 + 1000})
 						}),
 					_1: A2(_elm_lang$websocket$WebSocket$send, wsAddr, '{\"next\" : 1}')
 				};
 			case 'CurrentTime':
-				var _p22 = _p17._0;
-				var latency = _p22 - timing.sentAt;
+				var _p23 = _p18._0;
+				var latency = _p23 - timing.sentAt;
 				var wait = A2(_elm_lang$core$Basics$max, 0, timing.delay - latency);
 				return {
 					ctor: '_Tuple2',
@@ -10425,7 +10448,7 @@ var _user$project$Main$update = F2(
 						{
 							timing: _elm_lang$core$Native_Utils.update(
 								timing,
-								{waitUntil: _p22 + wait})
+								{waitUntil: _p23 + wait})
 						}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
@@ -10433,14 +10456,14 @@ var _user$project$Main$update = F2(
 				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 		}
 	});
-var _user$project$Main$subscriptions = function (_p23) {
-	var _p24 = _p23;
+var _user$project$Main$subscriptions = function (_p24) {
+	var _p25 = _p24;
 	return _elm_lang$core$Platform_Sub$batch(
 		{
 			ctor: '::',
 			_0: A2(
 				_elm_lang$websocket$WebSocket$listen,
-				_user$project$Main$wsAddress(_p24.url),
+				_user$project$Main$wsAddress(_p25.url),
 				_user$project$Main$NewMessage),
 			_1: {
 				ctor: '::',
