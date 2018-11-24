@@ -8,7 +8,7 @@ https://en.wikipedia.org/wiki/Brian%27s_Brain
 
 ## Start
 
-    sbcl --eval "(progn (asdf:operate 'asdf:load-op 'brain) (brain:start))"
+    sbcl --eval "(asdf:operate 'asdf:load-op 'brain)" --eval "(brain:start)"
 
 ## Create manifest file
 
