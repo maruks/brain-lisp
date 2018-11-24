@@ -10252,7 +10252,7 @@ var _user$project$Main$addCellsToBuffer = F2(
 		var currentIndex = _p23.currentIndex;
 		var showIndex = _p23.showIndex;
 		var nextCurrentIdx = A2(_elm_lang$core$Basics$rem, currentIndex + 1, size);
-		return _user$project$Main$isBufferFull(cellsBuffer) ? A2(_elm_lang$core$Debug$log, 'BUFFER FULL ', cellsBuffer) : _elm_lang$core$Native_Utils.update(
+		return _user$project$Main$isBufferFull(cellsBuffer) ? cellsBuffer : _elm_lang$core$Native_Utils.update(
 			cellsBuffer,
 			{
 				buffer: A3(_elm_lang$core$Array$set, nextCurrentIdx, cells, buffer),
