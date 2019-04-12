@@ -1,0 +1,18 @@
+#!/bin/sh
+#|-*- mode:lisp -*-|#
+#|
+exec ros -Q -- $0 "$@"
+|#
+(progn ;;init forms
+  (ros:ensure-asdf)
+  (ql:quickload '(:websocket-driver :clack :cl-json :hunchentoot :brain)))
+
+(defpackage :ros.script.foo.3764088082
+  (:use :cl))
+(in-package :ros.script.foo.3764088082)
+
+(defun main (&rest argv)
+  (declare (ignorable argv))
+  (asdf:load-system :brain)
+  (brain:start)
+  (sb-impl::toplevel-repl nil))

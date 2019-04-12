@@ -9,11 +9,8 @@
 
 (in-package :brain)
 
+;; dependencies
 ;; (ql:quickload '(:websocket-driver :clack :cl-json :hunchentoot))
-
-;; create manifest file
-;; (asdf:operate 'asdf:load-op 'brain)
-;; (ql:write-asdf-manifest-file "quicklisp-manifest.txt")
 
 (defvar *handler* nil)
 

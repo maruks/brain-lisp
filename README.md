@@ -2,23 +2,22 @@
 
 https://en.wikipedia.org/wiki/Brian%27s_Brain
 
-## Install dependencies
+## Add project to ASDF
 
-    (ql:quickload '(:websocket-driver :clack :cl-json :hunchentoot))
+    cd ~/.roswell/local-projects
+    ln -s ~/Projects/Lisp local
 
 ## Start
 
-    sbcl --eval "(asdf:operate 'asdf:load-op 'brain)" --eval "(brain:start)"
-
-## Create manifest file
-
-    (asdf:operate 'asdf:load-op 'brain)
-    (ql:write-asdf-manifest-file "quicklisp-manifest.txt")
+   ./brain.ros
 
 ## Build executable
 
-    buildapp --output brain --manifest-file quicklisp-manifest.txt \
-        --compress-core \
-        --load-system brain \
-        --eval '(defun main (args) (declare (ignore args)) (brain:start) (sb-impl::toplevel-repl nil))' \
-        --entry main
+    ros dump executable brain.ros
+
+## Docker image
+
+    docker build -t brain .
+    docker run --name brain --tty --network net -d brain
+    docker stop brain
+    docker start brain
