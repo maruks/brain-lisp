@@ -5,7 +5,7 @@ exec ros -Q -- $0 "$@"
 |#
 (progn ;;init forms
   (ros:ensure-asdf)
-  (ql:quickload '(:websocket-driver :clack :cl-json :hunchentoot :brain)))
+  (ql:quickload '(:brain)))
 
 (defpackage :ros.script.foo.3764088082
   (:use :cl))
@@ -13,6 +13,5 @@ exec ros -Q -- $0 "$@"
 
 (defun main (&rest argv)
   (declare (ignorable argv))
-  (asdf:load-system :brain)
-  (brain:start)
+  (brain-server:start)
   (sb-impl::toplevel-repl nil))

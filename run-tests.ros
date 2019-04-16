@@ -1,0 +1,16 @@
+#!/bin/sh
+#|-*- mode:lisp -*-|#
+#|
+exec ros -Q -- $0 "$@"
+|#
+(progn
+  (ros:ensure-asdf)
+  (ql:quickload "brain"))
+
+(defpackage :ros.script.run-tests.3764327350
+  (:use :cl))
+(in-package :ros.script.run-tests.3764327350)
+
+(defun main (&rest argv)
+  (declare (ignorable argv))
+  (asdf:test-system "brain"))
