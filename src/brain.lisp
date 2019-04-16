@@ -2,11 +2,6 @@
   (:use :common-lisp)
   (:export :initialize-grid :new-grid :next-state :next-grid :grid->list :count-live-neighbours))
 
-;; https://en.wikipedia.org/wiki/Brian%27s_Brain
-;; off, 2 on -> on
-;; on -> dying
-;; dying -> off
-
 (in-package :brain)
 
 (defun initialize-grid (grid width height)
