@@ -2,18 +2,13 @@
 
 https://en.wikipedia.org/wiki/Brian%27s_Brain
 
-## Add project to ASDF
-
-    cd ~/.roswell/local-projects
-    ln -s ~/Projects/Lisp local
-
 ## Start
 
-   ./brain.ros
+   make start
 
 ## Build executable
 
-    ros dump executable brain.ros
+    make
 
 ## Docker image
 
