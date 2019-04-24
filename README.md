@@ -4,7 +4,7 @@ https://en.wikipedia.org/wiki/Brian%27s_Brain
 
 ## Start
 
-   make start
+    make start
 
 ## Build executable
 
