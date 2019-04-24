@@ -3,8 +3,7 @@ LISP ?= sbcl
 build:
 	$(LISP) --non-interactive \
 	--load brain.asd \
-	--eval "(ql:quickload 'trivial-dump-core)" \
-	--eval "(ql:quickload 'brain)" \
+	--eval "(ql:quickload '(trivial-dump-core brain))" \
 	--eval "(trivial-dump-core:save-executable \"brain\" #'brain-server:main)"
 
 test:
