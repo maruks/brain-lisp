@@ -1,5 +1,5 @@
 (defpackage :brain-server
-  (:use :common-lisp :websocket-driver :clack :lack :cl-json :brain :apply-argv)
+  (:use :common-lisp :websocket-driver :clack :lack :cl-json :brain)
   (:export :start :halt :reset :main))
 
 (in-package :brain-server)
@@ -94,9 +94,9 @@
 
 (defun main ()
 
-  (let ((args (apply-argv:get-argv)))
-    (when args
-      (setf *static* (static-handler (pathname (car args))))))
+  (let ((path (merge-pathnames #p"public/")))
+    (setf *static* (static-handler path))
+    (print path))
 
   (start)
 

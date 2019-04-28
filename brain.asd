@@ -17,7 +17,6 @@
 	       :clack
 	       :clack-handler-hunchentoot
 	       :bordeaux-threads
-	       :apply-argv
 	       :cl-json)
 
   :serial t
