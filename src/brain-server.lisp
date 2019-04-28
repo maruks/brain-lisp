@@ -1,24 +1,21 @@
 (defpackage :brain-server
-  (:use :common-lisp :websocket-driver :clack :lack :cl-json :brain)
+  (:use :common-lisp :websocket-driver :clack :lack :cl-json :brain :apply-argv)
   (:export :start :halt :reset :main))
 
 (in-package :brain-server)
 
-;; dependencies
-;; (ql:quickload '(:websocket-driver :clack :cl-json :hunchentoot))
-;; (ql:quickload "brain")
-
 (defvar *handler* nil)
-
 (defvar *state* nil)
 
-(defparameter *static*
+(defun static-handler (path)
   (lack:builder
    (:static :path (lambda (path) (if (string= "/" path) "/index.html" path))
-	    :root (asdf:system-relative-pathname 'brain "public/"))
+	    :root path)
    (lambda (env)
      (declare (ignore env))
      '(200 nil nil))))
+
+(defparameter *static* (static-handler (asdf:system-relative-pathname 'brain "public/")))
 
 (defun colors-msg ()
   (let* ((on-color (acons :code 1 (list (cons :color "#0875d0"))))
@@ -96,6 +93,11 @@
   (start))
 
 (defun main ()
+
+  (let ((args (apply-argv:get-argv)))
+    (when args
+      (setf *static* (static-handler (pathname (car args))))))
+
   (start)
 
   (handler-case (bt:join-thread (find-if (lambda (th)
@@ -103,7 +105,7 @@
                                          (bt:all-threads)))
     ;; Catch a user's C-c
     (#+sbcl sb-sys:interactive-interrupt
-     #+ccl  ccl:interrupt-signal-condition
+     #+ccl ccl:interrupt-signal-condition
      #+clisp system::simple-interrupt-condition
      #+ecl ext:interactive-interrupt
      #+allegro excl:interrupt-signal

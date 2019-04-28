@@ -4,4 +4,4 @@ EXPOSE 8080
 
 ADD . /opt/
 WORKDIR /opt/
-ENTRYPOINT /opt/brain
+ENTRYPOINT ["/opt/brain", "/opt/public/"]
